@@ -4,19 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TicketSystem - Login</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-  <link rel="stylesheet" href="{{url_for('static', filename='loginstyles.css' )}}">
-
-    <script src="./assets/login.js"></script>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='loginstyles.css') }}">
+    <script defer src="{{ url_for('static', filename='login.js') }}"></script>
 </head>
 <body class="login-body">
 
     <div class="login-card">
-        
+
         <div class="logo-section">
             <i class="fa-solid fa-tags logo-icon"></i>
             <div class="logo-text">
@@ -27,16 +24,28 @@
 
         <h4 class="login-heading">Login</h4>
 
-    <!--Esse linha vai enviar os dados para a login-->
+        <!-- Mensagem de erro JWT -->
+        {% if erro %}
+        <div style="
+            background:#ffe5e5; border:1px solid #ffb3b3; color:#c0392b;
+            border-radius:6px; padding:10px 15px; font-size:0.85rem;
+            text-align:center; margin-bottom:18px;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Usuário ou senha inválidos.
+        </div>
+        {% endif %}
+
         <form method="POST" action="/login">
             <div class="input-group">
-                <label class="input-label">Usuário:</label>
-                <input type="text" class="custom-input" name="login" placeholder="Insira seu usuário..." required>
+                <label class="input-label">Usuário (e-mail):</label>
+                <input type="text" class="custom-input" name="login"
+                       placeholder="Insira seu e-mail..." required>
             </div>
 
             <div class="input-group group-spaced">
                 <label class="input-label">Senha:</label>
-                <input type="password" class="custom-input" name='senha' placeholder="Insira sua senha..." required>
+                <input type="password" class="custom-input" name="senha"
+                       placeholder="Insira sua senha..." required>
             </div>
 
             <div class="button-container">
@@ -44,43 +53,49 @@
             </div>
 
             <div class="input-group group-spaced">
-                <a onclick="showPasswordReset()" class="footer-link">Esqueci minha senha</a>
+                <a onclick="showPasswordReset()" class="footer-link" style="cursor:pointer;">
+                    Esqueci minha senha
+                </a>
             </div>
 
             <div class="login-footer">
                 <span class="footer-text">Ainda não possui uma conta?</span><br>
                 <a href="#" class="footer-link">Cadastre-se aqui</a>
             </div>
-
         </form>
     </div>
 
-
-   <div class="oculto" id="password-reset">
+    <!-- Modal: Redefinição de Senha -->
+    <div class="oculto" id="password-reset">
         <div class="password-overlay">
-            
-            <div class="password-card" style="text-align: center;">
-                
-                <h3 class="login-heading" style="margin-bottom: 10px;">Insira seu e-mail</h3>
-                <p style="font-size: 0.8rem; color: #666; margin-bottom: 25px;">Iremos enviar um e-mail informando a sua senha<br>caso esteja cadastrado em nosso sistema.</p>
+            <div class="password-card">
+                <h3 class="login-heading" style="margin-bottom:10px;">Insira seu e-mail</h3>
+                <p style="font-size:0.8rem; color:#666; margin-bottom:25px;">
+                    Iremos enviar um e-mail informando a sua senha<br>
+                    caso esteja cadastrado em nosso sistema.
+                </p>
 
                 <form onsubmit="passwordReset(event)">
-                    <div class="input-group" style="text-align: left;">
-                        <input type="email" class="custom-input" placeholder="Insira seu e-mail..." style="background-color: #f5f5f5; border: none;" required>
+                    <div class="input-group" style="text-align:left;">
+                        <input type="email" class="custom-input"
+                               placeholder="Insira seu e-mail..."
+                               style="background-color:#f5f5f5; border:none;" required>
                     </div>
-
-                    <div class="button-container" style="gap: 15px; margin-top: 10px; margin-bottom: 0;">
-                        <button type="submit" class="btn-submit" style="background-color: #ffc107; color: #fff; width: 100%;">Enviar Senha</button>
+                    <div class="button-container" style="gap:15px; margin-top:10px; margin-bottom:0;">
+                        <button type="submit" class="btn-submit"
+                                style="background-color:#ffc107; color:#fff; width:100%;">
+                            Enviar Senha
+                        </button>
                     </div>
-                        
-                    <div style="margin-top: 15px;">
-                        <a href="#" onclick="closePasswordReset()" class="footer-link" style="color: #666;">Voltar ao Login</a>
+                    <div style="margin-top:15px;">
+                        <a href="#" onclick="closePasswordReset()" class="footer-link" style="color:#666;">
+                            Voltar ao Login
+                        </a>
                     </div>
                 </form>
-                
             </div>
-
         </div>
     </div>
+
 </body>
 </html>
