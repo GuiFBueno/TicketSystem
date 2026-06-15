@@ -292,3 +292,22 @@
 .btn-alterar-senha:hover {
     background-color: #178221; 
 }
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+========================================= */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 30px 20px;
+        margin: 0 15px;
+    }
+    
+    .password-card, .reset-modal-box {
+        padding: 30px 20px;
+        margin: 0 15px;
+    }
+
+    .btn-submit {
+        width: 100%;
+    }
+}

@@ -625,8 +625,125 @@ body {
 }
 
 /* Center toggle button when collapsed */
-.layout-container.sidebar-collapsed .btn-toggle-sidebar {
+.btn-toggle-sidebar {
     margin-left: 0 !important;
     margin-top: 0 !important;
 }
-
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+========================================= */
+@media (max-width: 768px) {
+    .layout-container {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e0e0e0;
+        z-index: 10;
+        flex-direction: row !important;
+        align-items: center;
+        padding: 10px !important;
+    }
+
+    .brand-area {
+        padding: 0 10px !important;
+        height: auto !important;
+    }
+    
+    .brand-title, .brand-subtitle {
+        display: none !important;
+    }
+
+    .nav-links {
+        flex-direction: row !important;
+        padding: 0 10px !important;
+        gap: 10px !important;
+        overflow-x: auto;
+        flex: 1;
+        justify-content: flex-start !important;
+        padding-bottom: 0px !important;
+    }
+
+    .nav-item {
+        padding: 10px 15px !important;
+        white-space: nowrap;
+        width: auto !important;
+    }
+
+    .btn-logout-sidebar {
+        margin-top: 0 !important;
+        margin-left: auto !important;
+        margin-bottom: 0 !important;
+        width: auto !important;
+    }
+
+    .main-content {
+        overflow-y: auto !important;
+        height: 100% !important;
+    }
+
+    .top-header {
+        padding: 15px !important;
+        justify-content: flex-start;
+        background-color: #fdfdfd;
+    }
+
+    .btn-profile {
+        font-size: 0.85rem !important;
+        padding: 8px 12px !important;
+    }
+
+    .cadastros-grid {
+        grid-template-columns: 1fr !important;
+        padding: 15px !important;
+        gap: 20px !important;
+    }
+
+    .data-panel {
+        padding: 15px !important;
+    }
+
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+    
+    .data-table {
+        min-width: 600px;
+    }
+
+    .cadastro-modal-box {
+        padding: 20px !important;
+        margin: 15px !important;
+        width: calc(100% - 30px) !important;
+    }
+
+    .cadastro-input-row {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .cadastro-modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-cancelar, .btn-concluir {
+        width: 100%;
+    }
+}

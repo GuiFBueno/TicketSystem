@@ -342,6 +342,9 @@ def api_ticket_status(id):
         if user.role == 'user':
             return jsonify({'error': 'Usuários não podem assumir tickets'}), 403
         ticket.operator_id = user.id
+    elif new_status == 'em andamento' and ticket.status == 'fechado':
+        if user.role == 'user':
+            return jsonify({'error': 'Usuários não podem reabrir tickets'}), 403
     elif new_status == 'fechado':
         if ticket.operator_id and ticket.operator_id != user.id and user.role != 'admin':
             return jsonify({'error': 'Apenas o operador vinculado ou um admin pode concluir este ticket'}), 403
@@ -622,6 +625,9 @@ def send_message(ticket_id):
         
     if ticket.status == 'fechado':
         return jsonify({'error': 'Não é possível enviar mensagens. Este ticket já está concluído.'}), 400
+        
+    if ticket.status == 'aberto' and user.role != 'user':
+        return jsonify({'error': 'Não é possível enviar mensagens enquanto o ticket estiver em aberto.'}), 400
         
     text = request.form.get('text', '').strip()
     image_file = request.files.get('image')
