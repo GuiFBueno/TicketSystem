@@ -208,6 +208,7 @@ function abrirDetalhes(id) {
             if (chatBlockedBanner) chatBlockedBanner.classList.add('oculto');
         }
     }
+}
 
     // Carregar mensagens de um ticket da API e renderizar
     function carregarMensagens(ticket_id) {
