@@ -141,16 +141,9 @@ function abrirDetalhes(id) {
     if (footer) {
         // Lógica de exibição do rodapé
         if (isUser) {
-            if (ticket.status === 'fechado') {
-                footer.innerHTML = `
-                    <button class="btn-cancelar" onclick="reabrirTicket(${ticket.id})"><i class="fa-solid fa-lock-open"></i> Reabrir Ticket</button>
-                `;
-                footer.style.display = 'flex';
-                footer.style.justifyContent = 'center';
-            } else {
-                footer.innerHTML = '';
-                footer.style.display = 'none';
-            }
+            // Clientes não podem reabrir tickets
+            footer.innerHTML = '';
+            footer.style.display = 'none';
         } else {
             // Garante que o rodapé esteja visível para Admin/Operator
             footer.style.display = 'flex';
@@ -195,28 +188,15 @@ function abrirDetalhes(id) {
             btnSendMessage.disabled = true;
             btnAttach.style.pointerEvents = 'none';
             btnAttach.style.opacity = '0.5';
-            chatInput.placeholder = 'Ticket fechado. Reabra para enviar mensagens.';
+            chatInput.placeholder = 'Ticket fechado.';
             if (chatBlockedBanner) chatBlockedBanner.classList.remove('oculto');
-        } else {
-            chatInput.disabled = false;
-            chatAttach.disabled = false;
-            btnSendMessage.disabled = false;
-            btnAttach.style.pointerEvents = 'auto';
-            btnAttach.style.opacity = '1';
-            chatInput.placeholder = 'Escreva uma mensagem...';
-            if (chatBlockedBanner) chatBlockedBanner.classList.add('oculto');
-        }
-    }
-
-    //bloqueia chat se ticket aberto
-    if (chatInput && chatAttach && btnSendMessage && btnAttach) {
-        if (ticket.status === 'aberto') {
+        } else if (ticket.status === 'aberto' && !isUser) {
             chatInput.disabled = true;
             chatAttach.disabled = true;
             btnSendMessage.disabled = true;
             btnAttach.style.pointerEvents = 'none';
             btnAttach.style.opacity = '0.5';
-            chatInput.placeholder = 'Ticket pendente. Assuma para enviar mensagens.';
+            chatInput.placeholder = 'Aguarde um operador assumir o ticket.';
             if (chatBlockedBanner) chatBlockedBanner.classList.remove('oculto');
         } else {
             chatInput.disabled = false;

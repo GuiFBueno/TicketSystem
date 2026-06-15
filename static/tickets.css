@@ -815,9 +815,133 @@ body {
 }
 
 /* Center toggle button when collapsed */
-.layout-container.sidebar-collapsed .btn-toggle-sidebar {
+.btn-toggle-sidebar {
     margin-left: 0 !important;
     margin-top: 0 !important;
 }
 
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+========================================= */
+@media (max-width: 768px) {
+    .layout-container {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar-modern {
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e0e0e0;
+        z-index: 10;
+        flex-direction: row !important;
+        align-items: center;
+        padding: 10px !important;
+    }
+
+    .brand-area-modern {
+        padding: 0 10px !important;
+        height: auto !important;
+    }
+    
+    .brand-text-container {
+        display: none !important;
+    }
+
+    .nav-links {
+        flex-direction: row !important;
+        padding: 0 10px !important;
+        gap: 10px !important;
+        overflow-x: auto;
+        flex: 1;
+        justify-content: flex-start !important;
+        padding-bottom: 0px !important;
+    }
+
+    .nav-item-modern {
+        padding: 10px 15px !important;
+        white-space: nowrap;
+    }
+    
+    .btn-logout-sidebar {
+        margin-top: 0 !important;
+        margin-left: auto !important;
+        margin-bottom: 0 !important;
+    }
+
+    .main-content-modern {
+        overflow-y: auto !important;
+        height: 100% !important;
+    }
+
+    .top-banner-green {
+        height: auto !important;
+        padding: 15px !important;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .top-banner-green h2 {
+        font-size: 1.3rem !important;
+    }
+
+    .client-header {
+        position: relative !important;
+        top: 0 !important;
+        right: 0 !important;
+        height: auto !important;
+        padding: 15px !important;
+        justify-content: flex-start !important;
+        background-color: #1ea32a;
+    }
+
+    .client-header .btn-green, .client-header .btn-profile {
+        font-size: 0.85rem !important;
+        padding: 8px 12px !important;
+    }
+
+    .workspace-split {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        padding: 15px !important;
+    }
+
+    .left-panel {
+        width: 100% !important;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .vertical-divider {
+        display: none !important;
+    }
+
+    .right-panel {
+        width: 100% !important;
+    }
+
+    .ticket-details-card {
+        padding: 15px !important;
+    }
+
+    .details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .chat-feed {
+        max-height: 300px;
+    }
+
+    .chat-input-row {
+        flex-wrap: wrap;
+    }
+}
 
