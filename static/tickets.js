@@ -196,7 +196,7 @@ function abrirDetalhes(id) {
             btnSendMessage.disabled = true;
             btnAttach.style.pointerEvents = 'none';
             btnAttach.style.opacity = '0.5';
-            chatInput.placeholder = 'Aguarde um operador assumir o ticket.';
+            chatInput.placeholder = 'Chamado pendente, assuma para que você possa enviar mensagens.';
             if (chatBlockedBanner) chatBlockedBanner.classList.remove('oculto');
         } else {
             chatInput.disabled = false;
