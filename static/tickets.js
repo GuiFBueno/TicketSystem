@@ -189,7 +189,10 @@ function abrirDetalhes(id) {
             btnAttach.style.pointerEvents = 'none';
             btnAttach.style.opacity = '0.5';
             chatInput.placeholder = 'Ticket fechado.';
-            if (chatBlockedBanner) chatBlockedBanner.classList.remove('oculto');
+            if (chatBlockedBanner) {
+                chatBlockedBanner.innerHTML = '<i class="fa-solid fa-lock"></i> Este ticket foi concluído. O envio de mensagens está bloqueado.';
+                chatBlockedBanner.classList.remove('oculto');
+            }
         } else if (ticket.status === 'aberto' && !isUser) {
             chatInput.disabled = true;
             chatAttach.disabled = true;
@@ -197,7 +200,10 @@ function abrirDetalhes(id) {
             btnAttach.style.pointerEvents = 'none';
             btnAttach.style.opacity = '0.5';
             chatInput.placeholder = 'Chamado pendente, assuma para que você possa enviar mensagens.';
-            if (chatBlockedBanner) chatBlockedBanner.classList.remove('oculto');
+            if (chatBlockedBanner) {
+                chatBlockedBanner.innerHTML = '<i class="fa-solid fa-lock"></i> Chamado pendente, assuma para que você possa enviar mensagens.';
+                chatBlockedBanner.classList.remove('oculto');
+            }
         } else {
             chatInput.disabled = false;
             chatAttach.disabled = false;
