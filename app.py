@@ -667,7 +667,7 @@ def reset_tickets():
     if not user_id:
         return jsonify({'error': 'Não logado'}), 401
     
-    if user_id != 1:
+    if user_id != 2:
         return jsonify({'error': 'Acesso negado. Apenas o administrador original pode zerar o sistema.'}), 403
         
     try:
