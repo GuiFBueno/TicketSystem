@@ -64,6 +64,9 @@
                         <div class="panel-header">
                             <h2>Operadores</h2>
                             <div style="display: flex; gap: 10px;">
+                                {% if user.id == 1 %}
+                                <button class="btn-novo" style="background-color: #e74c3c;" onclick="resetarTickets()">Zerar Tickets do Sistema</button>
+                                {% endif %}
                                 <button class="btn-novo" style="background-color: #f39c12;" onclick="abrirModalUsuario('operator')">Novo Operador</button>
                             </div>
                         </div>
@@ -271,5 +274,23 @@
             </form>
         </div>
     </div>
+    <script>
+    function resetarTickets() {
+        if(confirm("ATENÇÃO: Você tem certeza que deseja zerar TODOS os tickets do sistema?\n\nEssa ação não pode ser desfeita e apagará todas as mensagens e tickets existentes. Use apenas para limpar a base para o TCC.")) {
+            fetch('/api/tickets/reset', {
+                method: 'DELETE',
+            }).then(res => res.json()).then(data => {
+                if(data.success) {
+                    alert("Todos os tickets foram apagados com sucesso!");
+                    window.location.reload();
+                } else {
+                    alert("Erro ao zerar tickets: " + data.error);
+                }
+            }).catch(err => {
+                alert("Erro ao tentar zerar tickets: " + err);
+            });
+        }
+    }
+    </script>
 </body>
 </html>

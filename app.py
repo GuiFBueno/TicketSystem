@@ -1,5 +1,10 @@
 import datetime
 import os
+from zoneinfo import ZoneInfo
+
+def get_local_time():
+    return datetime.datetime.now(ZoneInfo("America/Sao_Paulo")).replace(tzinfo=None)
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
@@ -38,7 +43,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=True)
     sector = db.Column(db.String(100), nullable=True)
     active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_local_time)
 
     def to_dict(self):
         return {
@@ -49,7 +54,7 @@ class User(db.Model):
             'setor': self.sector,
             'nivel': self.role,
             'is_admin': self.is_admin,
-            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
+            'data': self.created_at.strftime('%d/%m/%Y')
         }
 
 class Client(db.Model):
@@ -60,7 +65,7 @@ class Client(db.Model):
     phone = db.Column(db.String(20), nullable=True)
     sector = db.Column(db.String(100), nullable=True)
     username = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_local_time)
 
     def to_dict(self):
         return {
@@ -70,7 +75,7 @@ class Client(db.Model):
             'telefone': self.phone,
             'setor': self.sector,
             'usuario': self.username,
-            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
+            'data': self.created_at.strftime('%d/%m/%Y')
         }
 
 class Sector(db.Model):
@@ -78,14 +83,14 @@ class Sector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     manager = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_local_time)
 
     def to_dict(self):
         return {
             'id': self.id,
             'setor': self.name,
             'responsavel': self.manager,
-            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
+            'data': self.created_at.strftime('%d/%m/%Y')
         }
 
 class Ticket(db.Model):
@@ -97,7 +102,7 @@ class Ticket(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(50), default='aberto') # 'aberto', 'em andamento', 'fechado'
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_local_time)
 
     def to_dict(self):
         operator = User.query.get(self.operator_id) if self.operator_id else None
@@ -111,7 +116,7 @@ class Ticket(db.Model):
             'titulo': self.title,
             'descricao': self.description,
             'status': self.status,
-            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
+            'data': self.created_at.strftime('%d/%m/%Y')
         }
 
 class Message(db.Model):
@@ -122,7 +127,7 @@ class Message(db.Model):
     sender_name = db.Column(db.String(100), nullable=False)
     text = db.Column(db.Text, nullable=True)
     image_path = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=get_local_time)
 
     def to_dict(self):
         return {
@@ -132,7 +137,7 @@ class Message(db.Model):
             'sender_name': self.sender_name,
             'text': self.text,
             'image_path': self.image_path,
-            'created_at': (self.created_at - datetime.timedelta(hours=3)).strftime('%H:%M - %d/%m/%Y') if self.created_at else None
+            'created_at': self.created_at.strftime('%H:%M - %d/%m/%Y')
         }
 
 
@@ -187,7 +192,7 @@ def cadastros():
     user = User.query.get(session['user_id'])
     if not user or user.role != 'admin':
         return redirect(url_for('home'))
-    return render_template('cadastros.html')
+    return render_template('cadastros.html', user=user)
 
 @app.route('/relatorios')
 def relatorios():
@@ -639,7 +644,7 @@ def send_message(ticket_id):
     image_path = None
     if image_file:
         filename = secure_filename(image_file.filename)
-        timestamp = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+        timestamp = get_local_time().strftime('%Y%m%d%H%M%S%f')
         filename = f"{timestamp}_{filename}"
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(save_path)
@@ -655,6 +660,24 @@ def send_message(ticket_id):
     db.session.add(new_message)
     db.session.commit()
     return jsonify(new_message.to_dict()), 201
+
+@app.route('/api/tickets/reset', methods=['DELETE'])
+def reset_tickets():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Não logado'}), 401
+    
+    if user_id != 1:
+        return jsonify({'error': 'Acesso negado. Apenas o administrador original pode zerar o sistema.'}), 403
+        
+    try:
+        Message.query.delete()
+        Ticket.query.delete()
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
