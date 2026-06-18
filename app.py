@@ -1,10 +1,5 @@
 import datetime
 import os
-from zoneinfo import ZoneInfo
-
-def get_local_time():
-    return datetime.datetime.now(ZoneInfo("America/Sao_Paulo")).replace(tzinfo=None)
-
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
@@ -43,7 +38,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=True)
     sector = db.Column(db.String(100), nullable=True)
     active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=get_local_time)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
         return {
@@ -54,7 +49,7 @@ class User(db.Model):
             'setor': self.sector,
             'nivel': self.role,
             'is_admin': self.is_admin,
-            'data': self.created_at.strftime('%d/%m/%Y')
+            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
         }
 
 class Client(db.Model):
@@ -65,7 +60,7 @@ class Client(db.Model):
     phone = db.Column(db.String(20), nullable=True)
     sector = db.Column(db.String(100), nullable=True)
     username = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, default=get_local_time)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
         return {
@@ -75,7 +70,7 @@ class Client(db.Model):
             'telefone': self.phone,
             'setor': self.sector,
             'usuario': self.username,
-            'data': self.created_at.strftime('%d/%m/%Y')
+            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
         }
 
 class Sector(db.Model):
@@ -83,14 +78,14 @@ class Sector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     manager = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, default=get_local_time)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
         return {
             'id': self.id,
             'setor': self.name,
             'responsavel': self.manager,
-            'data': self.created_at.strftime('%d/%m/%Y')
+            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
         }
 
 class Ticket(db.Model):
@@ -102,7 +97,7 @@ class Ticket(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(50), default='aberto') # 'aberto', 'em andamento', 'fechado'
-    created_at = db.Column(db.DateTime, default=get_local_time)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
         operator = User.query.get(self.operator_id) if self.operator_id else None
@@ -116,7 +111,7 @@ class Ticket(db.Model):
             'titulo': self.title,
             'descricao': self.description,
             'status': self.status,
-            'data': self.created_at.strftime('%d/%m/%Y')
+            'data': (self.created_at - datetime.timedelta(hours=3)).strftime('%d/%m/%Y') if self.created_at else None
         }
 
 class Message(db.Model):
@@ -127,7 +122,7 @@ class Message(db.Model):
     sender_name = db.Column(db.String(100), nullable=False)
     text = db.Column(db.Text, nullable=True)
     image_path = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.DateTime, default=get_local_time)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
         return {
@@ -137,7 +132,7 @@ class Message(db.Model):
             'sender_name': self.sender_name,
             'text': self.text,
             'image_path': self.image_path,
-            'created_at': self.created_at.strftime('%H:%M - %d/%m/%Y')
+            'created_at': (self.created_at - datetime.timedelta(hours=3)).strftime('%H:%M - %d/%m/%Y') if self.created_at else None
         }
 
 
@@ -644,7 +639,7 @@ def send_message(ticket_id):
     image_path = None
     if image_file:
         filename = secure_filename(image_file.filename)
-        timestamp = get_local_time().strftime('%Y%m%d%H%M%S%f')
+        timestamp = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
         filename = f"{timestamp}_{filename}"
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(save_path)
