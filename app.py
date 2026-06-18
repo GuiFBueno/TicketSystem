@@ -107,6 +107,7 @@ class Ticket(db.Model):
             'cliente': self.client_name,
             'operator_id': self.operator_id,
             'operador': operator.name if operator else None,
+            'setor_operador': operator.sector if operator else None,
             'titulo': self.title,
             'descricao': self.description,
             'status': self.status,

@@ -134,6 +134,17 @@ function abrirDetalhes(id) {
         nomeOperador.textContent = ticket.operador ? ticket.operador : 'Nenhum';
     }
 
+    const containerSetorOperador = document.getElementById('detalheSetorOperadorContainer');
+    const nomeSetorOperador = document.getElementById('nomeSetorOperador');
+    if (containerSetorOperador && nomeSetorOperador) {
+        if (!ticket.operador) {
+            containerSetorOperador.style.display = 'none';
+        } else {
+            containerSetorOperador.style.display = 'block';
+            nomeSetorOperador.textContent = ticket.setor_operador ? ticket.setor_operador : 'Não informado';
+        }
+    }
+
     // Verificamos o nível do usuário
     const isUser = window.currentUser && window.currentUser.level === 'user';
     const footer = document.getElementById('detailsFooter');
